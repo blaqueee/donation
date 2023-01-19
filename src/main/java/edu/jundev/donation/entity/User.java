@@ -1,5 +1,6 @@
 package edu.jundev.donation.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.OnDelete;
@@ -10,6 +11,9 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.Size;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -41,9 +45,12 @@ public class User implements UserDetails {
     @ManyToOne
     private Gender gender;
 
+    @JsonFormat(pattern="yyyy-MM-dd")
+    private LocalDate birthday;
+    @Email
     @Column(name = "email", nullable = false)
     private String email;
-
+    @Size(min = 5, max = 50)
     @Column(name = "password", nullable = false)
     private String password;
 
@@ -58,7 +65,16 @@ public class User implements UserDetails {
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<Role> roles = new HashSet<>();
 
-
+    public User(String firstName, String lastName, BloodType bloodType, Gender gender, String email, LocalDate birthday,String password, Set<Role> roles) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.bloodType = bloodType;
+        this.gender = gender;
+        this.email = email;
+        this.birthday = birthday;
+        this.password = password;
+        this.roles = roles;
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
