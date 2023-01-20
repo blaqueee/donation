@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 @Repository
-public interface BloodRepository extends JpaRepository<BloodType,Long> {
+public interface BloodTypeRepository extends JpaRepository<BloodType,Long> {
     Optional<BloodType> findBloodTypeByName(String name);
 }

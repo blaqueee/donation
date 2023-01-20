@@ -1,4 +1,6 @@
 package edu.jundev.donation.dto.requests;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -6,8 +8,9 @@ import lombok.Setter;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.util.Set;
+import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -16,30 +19,35 @@ import java.util.Set;
 public class RegisterRequest {
     @NotBlank
     @Email
+    @JsonProperty("email")
     private String email;
 
     @NotBlank
     @Size(min = 5, max = 50)
+    @JsonProperty("password")
     private String password;
 
     @NotBlank
+    @JsonProperty("first_name")
     private String firstName;
 
     @NotBlank
+    @JsonProperty("last_name")
     private String lastName;
 
     @NotBlank
+    @JsonProperty("middle_name")
     private String middleName;
 
     @NotBlank
-    private String gender;
+    @JsonProperty("gender_id")
+    private Long genderId;
 
-    @NotBlank
-    private String bloodType;
+    @NotNull
+    @JsonProperty("blood_type_id")
+    private Long bloodTypeId;
 
-    @NotBlank
-    private Set<String> role;
-
-    @NotBlank
-    private String birthday;
+    @NotNull
+    @JsonProperty("birth_date")
+    private LocalDate birthDate;
 }
