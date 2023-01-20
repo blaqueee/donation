@@ -1,8 +1,6 @@
 package edu.jundev.donation.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import edu.jundev.donation.entity.BloodType;
-import edu.jundev.donation.entity.Gender;
 import lombok.*;
 
 @Getter
@@ -14,24 +12,21 @@ public class UserDto {
     @JsonProperty("id")
     private Long id;
 
-    @JsonProperty("firstName")
+    @JsonProperty("first_name")
     private String firstName;
 
-    @JsonProperty("lastName")
+    @JsonProperty("last_name")
     private String lastName;
 
-    @JsonProperty("middleName")
+    @JsonProperty("middle_name")
     private String middleName;
 
-    @JsonProperty("bloodType")
-    private BloodType bloodType;
+    @JsonProperty("blood_type")
+    private BloodTypeDto bloodType;
 
     @JsonProperty("gender")
-    private Gender gender;
+    private GenderDto gender;
 
     @JsonProperty("email")
     private String email;
-
-//    @JsonProperty("role")
-//    private String role;
 }
