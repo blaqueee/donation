@@ -35,4 +35,25 @@ public class GlobalExceptionHandler {
                 .getDefaultMessage();
     }
 
+    @ExceptionHandler(FileException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public String handleFileException(FileException e) {
+        return e.getMessage();
+    }
+
+    @ExceptionHandler(FileWriteException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public String handleFileWriteException(FileWriteException e) {
+        return e.getMessage();
+    }
+
+    @ExceptionHandler(GCPFileUploadException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public String handleGCPException(GCPFileUploadException e) {
+        return e.getMessage();
+    }
+
+
+
+
 }
