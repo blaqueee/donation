@@ -3,6 +3,7 @@ package edu.jundev.donation.configuration;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -45,7 +46,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     }
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests().anyRequest().permitAll();
+        http.authorizeRequests().antMatchers(HttpMethod.DELETE,"/news/{id}").hasRole("ADMIN").
+                antMatchers(HttpMethod.POST,"/news/create").hasRole("USER").
+                anyRequest().permitAll();
         http.formLogin().disable().logout().disable();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.csrf().disable();
