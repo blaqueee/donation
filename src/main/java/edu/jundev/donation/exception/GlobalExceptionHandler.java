@@ -53,7 +53,11 @@ public class GlobalExceptionHandler {
         return e.getMessage();
     }
 
-
+    @ExceptionHandler(ActivationException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public String handleActivationException(ActivationException e) {
+        return e.getMessage();
+    }
 
 
 }

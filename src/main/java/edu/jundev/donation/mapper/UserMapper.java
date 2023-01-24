@@ -1,9 +1,11 @@
 package edu.jundev.donation.mapper;
 
 import edu.jundev.donation.dto.UserDto;
-import edu.jundev.donation.dto.requests.EditRequest;
-import edu.jundev.donation.dto.requests.RegisterRequest;
+import edu.jundev.donation.dto.requests.UserEditRequest;
+import edu.jundev.donation.dto.response.ResponseJwt;
+import edu.jundev.donation.entity.PasswordReset;
 import edu.jundev.donation.entity.User;
+import edu.jundev.donation.entity.UserActivation;
 import edu.jundev.donation.exception.NotFoundException;
 import edu.jundev.donation.repository.BloodTypeRepository;
 import edu.jundev.donation.repository.GenderRepository;
@@ -11,6 +13,7 @@ import edu.jundev.donation.repository.RoleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.Random;
 import java.util.Set;
 
 @Component
@@ -22,20 +25,20 @@ public class UserMapper {
     private final GenderMapper genderMapper;
     private final BloodTypeMapper bloodTypeMapper;
 
-    public User toEntity(RegisterRequest form) {
+
+    public User toEntity(UserActivation activation) {
         return User.builder()
-                .firstName(form.getFirstName())
-                .lastName(form.getLastName())
-                .middleName(form.getMiddleName())
-                .email(form.getEmail())
-                .bloodType(bloodTypeRepository.findById(form.getBloodTypeId())
-                    .orElseThrow(() -> new NotFoundException("Blood type with id " + form.getBloodTypeId() + " not found!")))
-                .gender(genderRepository.findById(form.getGenderId())
-                    .orElseThrow(() -> new NotFoundException("Gender with id " + form.getGenderId() + " not found!")))
-                .birthDate(form.getBirthDate())
-                .password(form.getPassword())
+                .firstName("Анонимный")
+                .lastName("Пользователь")
+                .middleName("-")
+                .email(activation.getEmail())
+                .bloodType(activation.getBloodType())
+                .gender(activation.getGender())
+                .birthDate(activation.getBirthDate())
+                .password(activation.getPassword())
                 .roles(Set.of(roleRepository.findRoleByName("ROLE_USER")
-                    .orElseThrow(() -> new NotFoundException("Role 'ROLE_USER' not found!"))))
+                        .orElseThrow(() -> new NotFoundException("Role 'ROLE_USER' not found!"))))
+                .avatarUrl("anon.jpg")
                 .build();
     }
 
@@ -48,24 +51,43 @@ public class UserMapper {
                 .gender(genderMapper.toDto(user.getGender()))
                 .bloodType(bloodTypeMapper.toDto(user.getBloodType()))
                 .email(user.getEmail())
+                .avatarUrl(user.getAvatarUrl())
                 .build();
     }
 
-    public User toUserFromEdit(EditRequest form) {
-        return User.builder()
-                .id(form.getId())
-                .firstName(form.getFirstName())
-                .lastName(form.getLastName())
-                .middleName(form.getMiddleName())
-                .email(form.getEmail())
-                .bloodType(bloodTypeRepository.findById(form.getBloodTypeId())
-                        .orElseThrow(() -> new NotFoundException("Blood type with id " + form.getBloodTypeId() + " not found!")))
-                .gender(genderRepository.findById(form.getGenderId())
-                        .orElseThrow(() -> new NotFoundException("Gender with id " + form.getGenderId() + " not found!")))
-                .birthDate(form.getBirthDate())
-                .password(form.getPassword())
-                .roles(Set.of(roleRepository.findRoleByName("ROLE_USER")
-                        .orElseThrow(() -> new NotFoundException("Role 'ROLE_USER' not found!"))))
+    public User toUserFromEdit(User user, UserEditRequest form, String avatarUrl) {
+        user.setFirstName(form.getFirstName());
+        user.setLastName(form.getLastName());
+        user.setMiddleName(form.getMiddleName());
+        user.setBloodType(bloodTypeRepository.findById(form.getBloodTypeId())
+                .orElseThrow(() -> new NotFoundException("Blood type with id " + form.getBloodTypeId() + " not found!")));
+        user.setGender(genderRepository.findById(form.getGenderId())
+                .orElseThrow(() -> new NotFoundException("Gender with id " + form.getGenderId() + " not found!")));
+        user.setBirthDate(form.getBirthDate());
+        user.setAvatarUrl(avatarUrl);
+        return user;
+    }
+
+    public ResponseJwt toJwt(User user, String token) {
+        return ResponseJwt.builder()
+                .id(user.getId())
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
+                .middleName(user.getMiddleName())
+                .gender(genderMapper.toDto(user.getGender()))
+                .bloodType(bloodTypeMapper.toDto(user.getBloodType()))
+                .email(user.getEmail())
+                .avatarUrl(user.getAvatarUrl())
+                .token(token)
+                .tokenType("Bearer")
+                .build();
+    }
+
+    public PasswordReset toPasswordReset(User user) {
+        Random rnd = new Random();
+        return PasswordReset.builder()
+                .user(user)
+                .code(String.valueOf(rnd.nextInt(900000) + 100000))
                 .build();
     }
 }

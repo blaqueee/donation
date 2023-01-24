@@ -1,19 +1,32 @@
 package edu.jundev.donation.dto.response;
 
-import lombok.Getter;
-import lombok.Setter;
+import edu.jundev.donation.dto.BloodTypeDto;
+import edu.jundev.donation.dto.GenderDto;
+import lombok.*;
+
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class ResponseJwt {
-    private String accessToken;
-    private String tokenType = "Bearer";
     private Long id;
+
+    private String firstName;
+
+    private String lastName;
+
+    private String middleName;
+
+    private BloodTypeDto bloodType;
+
+    private GenderDto gender;
+
     private String email;
 
-    public ResponseJwt(String accessToken,Long id, String email) {
-        this.accessToken = accessToken;
-        this.id = id;
-        this.email = email;
-    }
+    private String avatarUrl;
 
+    private String token;
+
+    private String tokenType;
 }

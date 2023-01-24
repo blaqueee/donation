@@ -22,6 +22,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     private final UserDetailsServiceImpl userDetailsServiceimpl;
     private final AuthEntryPointJwt authEntryPointJwt;
     private final AuthTokenFilter authTokenFilter;
+
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -32,6 +34,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
     }
+
     @Bean
     public DaoAuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
@@ -39,20 +42,26 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         authProvider.setPasswordEncoder(passwordEncoder());
         return authProvider;
     }
+
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetailsServiceimpl)
                 .passwordEncoder(passwordEncoder());
     }
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests().antMatchers(HttpMethod.DELETE,"/news/{id}").hasRole("ADMIN").
-                antMatchers(HttpMethod.POST,"/news/create").hasRole("USER").
-                anyRequest().permitAll();
+        http.authorizeRequests()
+                .antMatchers(HttpMethod.DELETE,"/news/**").hasRole("ADMIN")
+                .antMatchers(HttpMethod.POST,"/news/**").hasRole("ADMIN")
+                .antMatchers(HttpMethod.POST, "/users/edit").fullyAuthenticated()
+                .anyRequest().permitAll();
+
         http.formLogin().disable().logout().disable();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.csrf().disable();
         http.cors();
+
         http.authenticationProvider(authenticationProvider());
         http.addFilterBefore(authTokenFilter, UsernamePasswordAuthenticationFilter.class);
         http.exceptionHandling().authenticationEntryPoint(authEntryPointJwt);
