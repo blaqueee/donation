@@ -1,4 +1,5 @@
 package edu.jundev.donation.controller;
+
 import edu.jundev.donation.dto.NewsDto;
 import edu.jundev.donation.dto.NewsShortDto;
 import edu.jundev.donation.dto.requests.NewsRequest;

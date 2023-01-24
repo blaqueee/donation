@@ -4,25 +4,26 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.web.multipart.MultipartFile;
 
-import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import java.time.LocalDate;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class RegisterRequest {
+public class UserEditRequest {
     @NotBlank
-    @Email
-    private String email;
+    private String firstName;
 
     @NotBlank
-    @Size(min = 5, max = 50)
-    private String password;
+    private String lastName;
+
+    @NotBlank
+    private String middleName;
 
     @NotNull
     private Long genderId;
@@ -31,5 +32,8 @@ public class RegisterRequest {
     private Long bloodTypeId;
 
     @NotNull
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate birthDate;
+
+    private MultipartFile avatar;
 }

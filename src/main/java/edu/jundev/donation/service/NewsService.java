@@ -33,7 +33,7 @@ public class NewsService {
     }
 
     public Page<NewsShortDto> findAll(Pageable pageable) {
-        var news = newsRepository.findAll(pageable);
+        var news = newsRepository.findByOrderByCreatedDateDesc(pageable);
         return news.map(newsMapper::toShortDto);
     }
 
