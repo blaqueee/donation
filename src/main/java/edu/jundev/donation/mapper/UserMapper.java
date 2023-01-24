@@ -1,6 +1,7 @@
 package edu.jundev.donation.mapper;
 
 import edu.jundev.donation.dto.UserDto;
+import edu.jundev.donation.dto.requests.EditRequest;
 import edu.jundev.donation.dto.requests.RegisterRequest;
 import edu.jundev.donation.entity.User;
 import edu.jundev.donation.exception.NotFoundException;
@@ -47,6 +48,24 @@ public class UserMapper {
                 .gender(genderMapper.toDto(user.getGender()))
                 .bloodType(bloodTypeMapper.toDto(user.getBloodType()))
                 .email(user.getEmail())
+                .build();
+    }
+
+    public User toUserFromEdit(EditRequest form) {
+        return User.builder()
+                .id(form.getId())
+                .firstName(form.getFirstName())
+                .lastName(form.getLastName())
+                .middleName(form.getMiddleName())
+                .email(form.getEmail())
+                .bloodType(bloodTypeRepository.findById(form.getBloodTypeId())
+                        .orElseThrow(() -> new NotFoundException("Blood type with id " + form.getBloodTypeId() + " not found!")))
+                .gender(genderRepository.findById(form.getGenderId())
+                        .orElseThrow(() -> new NotFoundException("Gender with id " + form.getGenderId() + " not found!")))
+                .birthDate(form.getBirthDate())
+                .password(form.getPassword())
+                .roles(Set.of(roleRepository.findRoleByName("ROLE_USER")
+                        .orElseThrow(() -> new NotFoundException("Role 'ROLE_USER' not found!"))))
                 .build();
     }
 }

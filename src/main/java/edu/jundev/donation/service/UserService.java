@@ -2,6 +2,7 @@ package edu.jundev.donation.service;
 
 import edu.jundev.donation.configuration.JwtUtils;
 import edu.jundev.donation.dto.UserDto;
+import edu.jundev.donation.dto.requests.EditRequest;
 import edu.jundev.donation.dto.requests.LoginRequest;
 import edu.jundev.donation.dto.requests.RegisterRequest;
 import edu.jundev.donation.dto.response.ResponseJwt;
@@ -53,5 +54,12 @@ public class UserService {
         User user = userMapper.toEntity(registerRequest);
         User saved = userRepository.save(user);
         return userMapper.toDto(saved);
+    }
+
+    public UserDto updateUser(EditRequest editRequest, User user) {
+        editRequest.setPassword(passwordEncoder.encode(editRequest.getPassword()));
+        User editUser = userMapper.toUserFromEdit(editRequest);
+        User updatedUser = userRepository.save(editUser);
+        return  userMapper.toDto(updatedUser);
     }
 }
