@@ -25,6 +25,9 @@ public class MedicalCenter {
     @Column(name = "location", nullable = false)
     private String location;
 
+    @ManyToOne
+    private Region region;
+
     @Column(name = "created_at", updatable = false, nullable = false)
     @CreationTimestamp
     private LocalDateTime createdAt;

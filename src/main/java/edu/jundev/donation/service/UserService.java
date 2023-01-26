@@ -72,6 +72,8 @@ public class UserService {
                 .orElseThrow(() -> new ActivationException("Error: Code doesn't exist!"));
         if (activation.getCreatedAt().plusMinutes(10).isBefore(LocalDateTime.now()))
             throw new ActivationException("Error: Code time has been expired!");
+
+        // TODO логика создания карточки
         User user = userMapper.toEntity(activation);
         User saved = userRepository.save(user);
         userActivationRepository.delete(activation);
@@ -82,6 +84,8 @@ public class UserService {
         User editUser = userMapper.toUserFromEdit(user, userEditRequest, avatar);
         User updatedUser = userRepository.save(editUser);
         return userMapper.toDto(updatedUser);
+
+        // TODO
     }
 
     public void restorePassword(String email) throws NotFoundException {

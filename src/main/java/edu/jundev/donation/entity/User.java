@@ -40,10 +40,10 @@ public class User implements UserDetails {
     private String middleName;
 
     @ManyToOne
-    private BloodType bloodType;
+    private BloodType bloodType;  //
 
     @ManyToOne
-    private Gender gender;
+    private Gender gender;  //
 
     @JsonFormat(pattern="yyyy-MM-dd")
     @Column(name = "birth_date", nullable = false)
