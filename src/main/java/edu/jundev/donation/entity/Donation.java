@@ -34,4 +34,6 @@ public class Donation {
     @Column(name = "created_at", updatable = false, nullable = false)
     @CreationTimestamp
     private LocalDateTime createdAt;
+
+    // Integer points;
 }
