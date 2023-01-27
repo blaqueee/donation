@@ -20,7 +20,7 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/edit")
-    ResponseEntity<UserDto> editUser(@Valid @ModelAttribute UserEditRequest userEditRequest,
+    ResponseEntity<UserInfoDto> editUser(@Valid @RequestBody UserEditRequest userEditRequest,
                                      @AuthenticationPrincipal User user) {
         return ResponseEntity.ok(userService.updateUser(userEditRequest, user));
     }

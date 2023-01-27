@@ -50,8 +50,8 @@ public class UserMapper {
     }
 
     public User toUserFromEdit(User user, UserEditRequest form, String avatarUrl) {
-        user.setFirstName(form.getFirstName());
-        user.setLastName(form.getLastName());
+        user.setFirstName(form.getName());
+        user.setLastName(form.getSurname());
         user.setBirthDate(form.getBirthDate());
         user.setAvatarUrl(avatarUrl);
         return user;

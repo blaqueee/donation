@@ -81,7 +81,6 @@ public class UserService {
         if (activation.getCreatedAt().plusMinutes(10).isBefore(LocalDateTime.now()))
             throw new ActivationException("Error: Code time has been expired!");
 
-        // TODO логика создания карточки
         User user = userMapper.toEntity(activation);
         User savedUser = userRepository.save(user);
         UserInfo userInfo = userInfoMapper.toUserInfoFromRegister(activation,savedUser);
@@ -89,13 +88,15 @@ public class UserService {
         userActivationRepository.delete(activation);
     }
 
-    public UserDto updateUser(UserEditRequest userEditRequest, User user) throws FileException {
+    public UserInfoDto updateUser(UserEditRequest userEditRequest, User user) throws FileException {
         String avatar = uploadAvatar(userEditRequest.getAvatar());
         User editUser = userMapper.toUserFromEdit(user, userEditRequest, avatar);
         User updatedUser = userRepository.save(editUser);
-        return userMapper.toDto(updatedUser);
-
-        // TODO
+        UserInfo userInfo = userInfoRepository.findByUser(updatedUser).orElseThrow(()->
+                new NotFoundException("No such a user card info found"));
+        UserInfo updatedUserInfo = userInfoMapper.toUserInfoFromEdit(userInfo,updatedUser,userEditRequest);
+        userInfoRepository.save(updatedUserInfo);
+        return userInfoMapper.toDto(updatedUserInfo);
     }
 
     public void restorePassword(String email) throws NotFoundException {

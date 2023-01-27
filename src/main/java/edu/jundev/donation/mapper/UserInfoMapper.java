@@ -1,9 +1,13 @@
 package edu.jundev.donation.mapper;
 
 import edu.jundev.donation.dto.UserInfoDto;
+import edu.jundev.donation.dto.requests.UserEditRequest;
 import edu.jundev.donation.entity.User;
 import edu.jundev.donation.entity.UserActivation;
 import edu.jundev.donation.entity.UserInfo;
+import edu.jundev.donation.repository.BloodTypeRepository;
+import edu.jundev.donation.repository.GenderRepository;
+import edu.jundev.donation.repository.UserInfoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -14,6 +18,8 @@ public class UserInfoMapper {
     private final UserMapper userMapper;
     private final BloodTypeMapper bloodTypeMapper;
     private final GenderMapper genderMapper;
+    private final GenderRepository genderRepository;
+    private final BloodTypeRepository bloodTypeRepository;
 
     public UserInfo toUserInfoFromRegister(UserActivation activation, User savedUser) {
         return UserInfo.builder()
@@ -40,5 +46,14 @@ public class UserInfoMapper {
                 .region(userInfo.getRegion())
                 .phoneNumber(userInfo.getPhoneNumber())
                 .build();
+    }
+
+    public UserInfo toUserInfoFromEdit(UserInfo userInfo, User updatedUser, UserEditRequest userEditRequest) {
+        userInfo.setUser(updatedUser);
+        userInfo.setGender(genderRepository.findById(userEditRequest.getGenderId()).orElseThrow());
+        userInfo.setBloodType(bloodTypeRepository.findById(userEditRequest.getBloodTypeId()).orElseThrow());
+        userInfo.setPhoneNumber(userEditRequest.getPhoneNumber());
+        userInfo.setRegion(userEditRequest.getRegion());
+        return userInfo;
     }
 }
