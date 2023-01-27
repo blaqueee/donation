@@ -19,6 +19,8 @@ public class UserInfoMapper {
         return UserInfo.builder()
                 .user(savedUser)
                 .amountOfDonations(0)
+                .phoneNumber(996000000)
+                .region("Unknown")
                 .points(0)
                 .status(statusMapper.initialStatus())
                 .gender(activation.getGender())
@@ -35,6 +37,8 @@ public class UserInfoMapper {
                 .statusDto(statusMapper.toDto(userInfo.getStatus()))
                 .amountOfDonations(userInfo.getAmountOfDonations())
                 .points(userInfo.getPoints())
+                .region(userInfo.getRegion())
+                .phoneNumber(userInfo.getPhoneNumber())
                 .build();
     }
 }

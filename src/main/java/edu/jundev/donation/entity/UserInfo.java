@@ -30,7 +30,8 @@ public class UserInfo {
 
     @OneToOne
     private User user;
-
+    private Integer phoneNumber;
+    private String region;
     @Column(nullable = false)
     private Integer amountOfDonations;
 }
