@@ -36,15 +36,6 @@ public class User implements UserDetails {
     @Column(name = "last_name")
     private String lastName;
 
-    @Column(name = "middle_name")
-    private String middleName;
-
-    @ManyToOne
-    private BloodType bloodType;  //
-
-    @ManyToOne
-    private Gender gender;  //
-
     @JsonFormat(pattern="yyyy-MM-dd")
     @Column(name = "birth_date", nullable = false)
     private LocalDate birthDate;

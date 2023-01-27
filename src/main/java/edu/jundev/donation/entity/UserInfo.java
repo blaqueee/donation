@@ -25,12 +25,12 @@ public class UserInfo {
     @Column(nullable = false)
     private Integer points;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     private Status status;
 
     @OneToOne
     private User user;
 
-    @Column
+    @Column(nullable = false)
     private Integer amountOfDonations;
 }

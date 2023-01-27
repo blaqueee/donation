@@ -28,12 +28,9 @@ public class UserMapper {
 
     public User toEntity(UserActivation activation) {
         return User.builder()
-                .firstName("Анонимный")
-                .lastName("Пользователь")
-                .middleName("-")
+                .firstName(activation.getName())
+                .lastName(activation.getSurname())
                 .email(activation.getEmail())
-                .bloodType(activation.getBloodType())
-                .gender(activation.getGender())
                 .birthDate(activation.getBirthDate())
                 .password(activation.getPassword())
                 .roles(Set.of(roleRepository.findRoleByName("ROLE_USER")
@@ -47,9 +44,6 @@ public class UserMapper {
                 .id(user.getId())
                 .firstName(user.getFirstName())
                 .lastName(user.getLastName())
-                .middleName(user.getMiddleName())
-                .gender(genderMapper.toDto(user.getGender()))
-                .bloodType(bloodTypeMapper.toDto(user.getBloodType()))
                 .email(user.getEmail())
                 .avatarUrl(user.getAvatarUrl())
                 .build();
@@ -58,11 +52,6 @@ public class UserMapper {
     public User toUserFromEdit(User user, UserEditRequest form, String avatarUrl) {
         user.setFirstName(form.getFirstName());
         user.setLastName(form.getLastName());
-        user.setMiddleName(form.getMiddleName());
-        user.setBloodType(bloodTypeRepository.findById(form.getBloodTypeId())
-                .orElseThrow(() -> new NotFoundException("Blood type with id " + form.getBloodTypeId() + " not found!")));
-        user.setGender(genderRepository.findById(form.getGenderId())
-                .orElseThrow(() -> new NotFoundException("Gender with id " + form.getGenderId() + " not found!")));
         user.setBirthDate(form.getBirthDate());
         user.setAvatarUrl(avatarUrl);
         return user;
@@ -73,9 +62,6 @@ public class UserMapper {
                 .id(user.getId())
                 .firstName(user.getFirstName())
                 .lastName(user.getLastName())
-                .middleName(user.getMiddleName())
-                .gender(genderMapper.toDto(user.getGender()))
-                .bloodType(bloodTypeMapper.toDto(user.getBloodType()))
                 .email(user.getEmail())
                 .avatarUrl(user.getAvatarUrl())
                 .token(token)

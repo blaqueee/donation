@@ -13,3 +13,4 @@ INSERT INTO public.blood_types(name) VALUES('O(I)-');
 INSERT INTO public.blood_types(name) VALUES('A(II)-');
 INSERT INTO public.blood_types(name) VALUES('B(III)-');
 INSERT INTO public.blood_types(name) VALUES('AB(IV)-');
+
