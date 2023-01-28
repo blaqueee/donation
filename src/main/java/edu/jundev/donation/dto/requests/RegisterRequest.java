@@ -24,7 +24,10 @@ public class RegisterRequest {
     @Size(min = 5, max = 50)
     private String password;
 
-    //имя и фамилия
+    @NotBlank
+    private String name;
+    @NotBlank
+    String surname;
 
     @NotNull
     private Long genderId;

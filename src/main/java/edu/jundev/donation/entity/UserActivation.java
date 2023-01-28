@@ -19,6 +19,10 @@ public class UserActivation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "name", nullable = false)
+    private String name;
+    @Column(name = "surname", nullable = false)
+    private String surname;
     @Column(name = "email", nullable = false)
     private String email;
 
@@ -33,6 +37,8 @@ public class UserActivation {
 
     @ManyToOne
     private BloodType bloodType;
+    @OneToOne
+    UserInfo userInfo;
 
     @Column(name = "birth_date", nullable = false)
     private LocalDate birthDate;

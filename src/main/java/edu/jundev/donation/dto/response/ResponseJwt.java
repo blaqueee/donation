@@ -16,7 +16,6 @@ public class ResponseJwt {
 
     private String lastName;
 
-    private String middleName;
 
     private BloodTypeDto bloodType;
 

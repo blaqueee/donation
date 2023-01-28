@@ -2,6 +2,7 @@ package edu.jundev.donation.service;
 
 import edu.jundev.donation.configuration.JwtUtils;
 import edu.jundev.donation.dto.UserDto;
+import edu.jundev.donation.dto.UserInfoDto;
 import edu.jundev.donation.dto.requests.ResetPasswordRequest;
 import edu.jundev.donation.dto.requests.UserEditRequest;
 import edu.jundev.donation.dto.requests.LoginRequest;
@@ -10,14 +11,18 @@ import edu.jundev.donation.dto.response.ResponseJwt;
 import edu.jundev.donation.entity.PasswordReset;
 import edu.jundev.donation.entity.User;
 import edu.jundev.donation.entity.UserActivation;
+import edu.jundev.donation.entity.UserInfo;
 import edu.jundev.donation.exception.ActivationException;
 import edu.jundev.donation.exception.EmailExistsException;
 import edu.jundev.donation.exception.FileException;
 import edu.jundev.donation.exception.NotFoundException;
+import edu.jundev.donation.mapper.StatusMapper;
 import edu.jundev.donation.mapper.UserActivationMapper;
+import edu.jundev.donation.mapper.UserInfoMapper;
 import edu.jundev.donation.mapper.UserMapper;
 import edu.jundev.donation.repository.PasswordResetRepository;
 import edu.jundev.donation.repository.UserActivationRepository;
+import edu.jundev.donation.repository.UserInfoRepository;
 import edu.jundev.donation.repository.UserRepository;
 import edu.jundev.donation.utils.CloudStorage;
 import lombok.RequiredArgsConstructor;
@@ -45,6 +50,9 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final JwtUtils jwtUtils;
     private final CloudStorage cloudStorage;
+    private final UserInfoMapper userInfoMapper;
+    private final UserInfoRepository userInfoRepository;
+
 
     public ResponseJwt authenticateUser(LoginRequest requestLogin) {
         Authentication authentication = authenticationManager.authenticate(
@@ -73,19 +81,22 @@ public class UserService {
         if (activation.getCreatedAt().plusMinutes(10).isBefore(LocalDateTime.now()))
             throw new ActivationException("Error: Code time has been expired!");
 
-        // TODO логика создания карточки
         User user = userMapper.toEntity(activation);
-        User saved = userRepository.save(user);
+        User savedUser = userRepository.save(user);
+        UserInfo userInfo = userInfoMapper.toUserInfoFromRegister(activation,savedUser);
+        userInfoRepository.save(userInfo);
         userActivationRepository.delete(activation);
     }
 
-    public UserDto updateUser(UserEditRequest userEditRequest, User user) throws FileException {
+    public UserInfoDto updateUser(UserEditRequest userEditRequest, User user) throws FileException {
         String avatar = uploadAvatar(userEditRequest.getAvatar());
         User editUser = userMapper.toUserFromEdit(user, userEditRequest, avatar);
         User updatedUser = userRepository.save(editUser);
-        return userMapper.toDto(updatedUser);
-
-        // TODO
+        UserInfo userInfo = userInfoRepository.findByUser(updatedUser).orElseThrow(()->
+                new NotFoundException("No such a user card info found"));
+        UserInfo updatedUserInfo = userInfoMapper.toUserInfoFromEdit(userInfo,updatedUser,userEditRequest);
+        userInfoRepository.save(updatedUserInfo);
+        return userInfoMapper.toDto(updatedUserInfo);
     }
 
     public void restorePassword(String email) throws NotFoundException {
@@ -113,5 +124,11 @@ public class UserService {
         if (!cloudStorage.isImageFile(file))
             throw new FileException("Avatar is not image file!");
         return cloudStorage.uploadFile(file);
+    }
+
+    public UserInfoDto getUserById(Long id) {
+        UserInfo userInfo = userInfoRepository.findById(id).orElseThrow(()->
+                new NotFoundException("No such a user found with id" + id));
+        return userInfoMapper.toDto(userInfo);
     }
 }
