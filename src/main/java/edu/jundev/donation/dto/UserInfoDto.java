@@ -21,5 +21,5 @@ public class UserInfoDto {
 
     private Integer amountOfDonations;
     private Integer phoneNumber;
-    private String region;
+    private RegionDto regionDto;
 }

@@ -92,8 +92,10 @@ public class UserService {
         String avatar = uploadAvatar(userEditRequest.getAvatar());
         User editUser = userMapper.toUserFromEdit(user, userEditRequest, avatar);
         User updatedUser = userRepository.save(editUser);
+
         UserInfo userInfo = userInfoRepository.findByUser(updatedUser).orElseThrow(()->
                 new NotFoundException("No such a user card info found"));
+
         UserInfo updatedUserInfo = userInfoMapper.toUserInfoFromEdit(userInfo,updatedUser,userEditRequest);
         userInfoRepository.save(updatedUserInfo);
         return userInfoMapper.toDto(updatedUserInfo);

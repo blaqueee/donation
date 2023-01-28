@@ -11,7 +11,6 @@ import javax.persistence.Column;
 public class StatusDto {
     private Long id;
     private String name;
-
     private Integer points;
     private Integer queueNumber;
 }
