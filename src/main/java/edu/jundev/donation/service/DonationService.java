@@ -22,22 +22,21 @@ public class DonationService {
 
     public DonationDto donate(DonationRequest form) {
         User user = userRepository.findByEmail(form.getEmail())
-                .orElseThrow(() -> new NotFoundException(""));
+                .orElseThrow(() -> new NotFoundException("No user found with email " + form.getEmail()));
         MedicalCenter medicalCenter = medicalCenterRepository.findById(form.getMedicalCenterId())
-                .orElseThrow(() -> new NotFoundException(""));
+                .orElseThrow(() -> new NotFoundException("No medical centre found with id" + form.getMedicalCenterId()));
 
         Donation donation = donationMapper.toEntity(user, medicalCenter, form.getBloodVolume());
+        Integer newPoints = updateStatus(user);
+        donation.setPoints(newPoints);
         Donation savedDonation = donationRepository.save(donation);
-        Integer newPoints = getNextStatus(user).getPoints();
-        // donation.setPoints(newPoints);
-        updateStatus(user);
-        //return donationMapper.toDto(savedDonation);
-        throw new RuntimeException();
+        return donationMapper.toDto(savedDonation);
+
     }
 
     private Integer updateStatus(User user) throws NotFoundException {
         UserInfo userInfo = userInfoRepository.findByUser(user)
-                .orElseThrow(() -> new NotFoundException("asdfasf")); //находит карточку юзера
+                .orElseThrow(() -> new NotFoundException("The user doesn't exist!")); //находит карточку юзера
 
         Integer amount = userInfo.getAmountOfDonations(); // количество донатов юзера
 
@@ -51,11 +50,4 @@ public class DonationService {
         return newStatus.getPoints();// сохранение
     }
 
-    private Status getNextStatus(User user) {
-        UserInfo userInfo = userInfoRepository.findByUser(user)
-                .orElseThrow(() -> new NotFoundException("asdfasf")); //находит карточку юзера
-        Integer amount = userInfo.getAmountOfDonations(); // количество донатов юзера
-        return statusRepository.findByQueueNumber(amount + 1)
-                .orElse(userInfo.getStatus()); // новый статус
-    }
 }

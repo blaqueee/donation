@@ -31,10 +31,8 @@ public class UserEditRequest {
     @NotNull
     private Integer phoneNumber;
     @NotNull
-    private String  region;
-
+    private Long  regionId;
     @NotNull
     private LocalDate birthDate;
-
     private MultipartFile avatar;
 }

@@ -7,6 +7,7 @@ import edu.jundev.donation.entity.UserActivation;
 import edu.jundev.donation.entity.UserInfo;
 import edu.jundev.donation.repository.BloodTypeRepository;
 import edu.jundev.donation.repository.GenderRepository;
+import edu.jundev.donation.repository.RegionRepository;
 import edu.jundev.donation.repository.UserInfoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -20,13 +21,15 @@ public class UserInfoMapper {
     private final GenderMapper genderMapper;
     private final GenderRepository genderRepository;
     private final BloodTypeRepository bloodTypeRepository;
+    private final RegionRepository regionRepository;
+    private final RegionMapper regionMapper;
 
     public UserInfo toUserInfoFromRegister(UserActivation activation, User savedUser) {
         return UserInfo.builder()
                 .user(savedUser)
                 .amountOfDonations(0)
                 .phoneNumber(996000000)
-                .region("Unknown")
+                .region(regionRepository.findById(9L).orElseThrow())
                 .points(0)
                 .status(statusMapper.initialStatus())
                 .gender(activation.getGender())
@@ -43,7 +46,7 @@ public class UserInfoMapper {
                 .statusDto(statusMapper.toDto(userInfo.getStatus()))
                 .amountOfDonations(userInfo.getAmountOfDonations())
                 .points(userInfo.getPoints())
-                .region(userInfo.getRegion())
+                .regionDto(regionMapper.toDto(userInfo.getRegion()))
                 .phoneNumber(userInfo.getPhoneNumber())
                 .build();
     }
@@ -53,7 +56,7 @@ public class UserInfoMapper {
         userInfo.setGender(genderRepository.findById(userEditRequest.getGenderId()).orElseThrow());
         userInfo.setBloodType(bloodTypeRepository.findById(userEditRequest.getBloodTypeId()).orElseThrow());
         userInfo.setPhoneNumber(userEditRequest.getPhoneNumber());
-        userInfo.setRegion(userEditRequest.getRegion());
+        userInfo.setRegion(regionRepository.findById(userEditRequest.getRegionId()).orElseThrow());
         return userInfo;
     }
 }
