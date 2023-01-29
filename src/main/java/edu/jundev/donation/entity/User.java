@@ -48,7 +48,7 @@ public class User implements UserDetails {
     @Column(name = "password", nullable = false)
     private String password;
 
-    @Column(name = "avatar_url", nullable = false)
+    @Column(name = "avatar_url",nullable = false)
     private String avatarUrl;
 
     @Column(name = "created_at", updatable = false, nullable = false)
