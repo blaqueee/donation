@@ -37,7 +37,7 @@ public class ServiceService {
                 .orElseThrow(() -> new NotFoundException("Service with id " + id + " not found!"));
         serviceRepository.delete(services);
     }
-
+// ...
     public List<ServiceDto> getServiceByCategory(ServiceCategoryDto serviceCategory){
         var service = serviceRepository.findAll();
         return service.stream()
