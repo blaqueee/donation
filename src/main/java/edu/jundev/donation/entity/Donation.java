@@ -31,10 +31,10 @@ public class Donation {
     @Column(name = "volume", nullable = false)
     private BigDecimal volume;
 
-    @Column(name = "created_at", updatable = false, nullable = false)
-    @CreationTimestamp
-    private LocalDateTime createdAt;
     @Column(name = "points", nullable = false)
     private Integer points;
 
+    @Column(name = "created_at", updatable = false, nullable = false)
+    @CreationTimestamp
+    private LocalDateTime createdAt;
 }

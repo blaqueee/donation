@@ -9,7 +9,6 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -26,15 +25,13 @@ public class RegisterRequest {
 
     @NotBlank
     private String name;
+
     @NotBlank
-    String surname;
+    private String lastName;
 
     @NotNull
     private Long genderId;
 
     @NotNull
     private Long bloodTypeId;
-
-    @NotNull
-    private LocalDate birthDate;
 }

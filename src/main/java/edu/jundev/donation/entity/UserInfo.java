@@ -22,7 +22,7 @@ public class UserInfo {
     @ManyToOne
     private Gender gender;
 
-    @Column(nullable = false)
+    @Column(name = "points")
     private Integer points;
 
     @ManyToOne(cascade = CascadeType.ALL)
@@ -30,9 +30,13 @@ public class UserInfo {
 
     @OneToOne
     private User user;
-    private Integer phoneNumber;
+
+    @Column(name = "phone_number")
+    private String phoneNumber;
+
     @ManyToOne
     private Region region;
-    @Column(nullable = false)
+
+    @Column(name = "amount_of_donations", nullable = false)
     private Integer amountOfDonations;
 }

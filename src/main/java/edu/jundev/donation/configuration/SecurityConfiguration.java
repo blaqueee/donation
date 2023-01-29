@@ -54,7 +54,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
                 .antMatchers(HttpMethod.DELETE,"/news/**").hasRole("ADMIN")
                 .antMatchers(HttpMethod.POST,"/news/**").hasRole("ADMIN")
-                .antMatchers(HttpMethod.POST, "/users/edit").fullyAuthenticated()
+                .antMatchers(HttpMethod.POST, "/users/**").fullyAuthenticated()
+                .antMatchers("/donations/**").fullyAuthenticated()
                 .anyRequest().permitAll();
 
         http.formLogin().disable().logout().disable();

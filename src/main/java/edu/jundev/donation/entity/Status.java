@@ -21,6 +21,7 @@ public class Status {
 
     @Column
     private Integer points;
+
     @Column(name = "queues")
     private Integer queueNumber;
 }

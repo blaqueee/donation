@@ -26,6 +26,8 @@ import edu.jundev.donation.repository.UserInfoRepository;
 import edu.jundev.donation.repository.UserRepository;
 import edu.jundev.donation.utils.CloudStorage;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -83,7 +85,7 @@ public class UserService {
 
         User user = userMapper.toEntity(activation);
         User savedUser = userRepository.save(user);
-        UserInfo userInfo = userInfoMapper.toUserInfoFromRegister(activation,savedUser);
+        UserInfo userInfo = userInfoMapper.toUserInfoFromRegister(activation, savedUser);
         userInfoRepository.save(userInfo);
         userActivationRepository.delete(activation);
     }
@@ -93,10 +95,10 @@ public class UserService {
         User editUser = userMapper.toUserFromEdit(user, userEditRequest, avatar);
         User updatedUser = userRepository.save(editUser);
 
-        UserInfo userInfo = userInfoRepository.findByUser(updatedUser).orElseThrow(()->
+        UserInfo userInfo = userInfoRepository.findByUser(updatedUser).orElseThrow(() ->
                 new NotFoundException("No such a user card info found"));
 
-        UserInfo updatedUserInfo = userInfoMapper.toUserInfoFromEdit(userInfo,updatedUser,userEditRequest);
+        UserInfo updatedUserInfo = userInfoMapper.toUserInfoFromEdit(userInfo, updatedUser, userEditRequest);
         userInfoRepository.save(updatedUserInfo);
         return userInfoMapper.toDto(updatedUserInfo);
     }
@@ -120,6 +122,17 @@ public class UserService {
         user.setPassword(passwordEncoder.encode(form.getPassword()));
     }
 
+    public UserInfoDto getUserById(Long id) {
+        UserInfo userInfo = userInfoRepository.findById(id).orElseThrow(() ->
+                new NotFoundException("No such a user found with id" + id));
+        return userInfoMapper.toDto(userInfo);
+    }
+
+    public Page<UserInfoDto> findAll(Pageable pageable) {
+        var users = userInfoRepository.findAll(pageable);
+        return users.map(userInfoMapper::toDto);
+    }
+
     private String uploadAvatar(MultipartFile file) throws FileException {
         if (file == null)
             return "anon.jpg";
@@ -128,9 +141,9 @@ public class UserService {
         return cloudStorage.uploadFile(file);
     }
 
-    public UserInfoDto getUserById(Long id) {
-        UserInfo userInfo = userInfoRepository.findById(id).orElseThrow(()->
-                new NotFoundException("No such a user found with id" + id));
+    public UserInfoDto getProfile(User user) {
+        var userInfo = userInfoRepository.findByUser(user)
+                .orElseThrow(() -> new NotFoundException("Profile not found!"));
         return userInfoMapper.toDto(userInfo);
     }
 }

@@ -2,15 +2,15 @@ package edu.jundev.donation.mapper;
 
 import edu.jundev.donation.dto.ServiceDto;
 import edu.jundev.donation.dto.requests.ServiceRequest;
-import edu.jundev.donation.entity.Services;
+import edu.jundev.donation.entity.Service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
 public class ServiceMapper {
-    public Services toEntity(ServiceRequest serviceRequest){
-        return Services.builder()
+    public Service toEntity(ServiceRequest serviceRequest){
+        return Service.builder()
                 .price(serviceRequest.getPrice())
                 .name(serviceRequest.getName())
                 .medicalCenter(serviceRequest.getMedicalCenter())
@@ -18,13 +18,13 @@ public class ServiceMapper {
                 .build();
     }
 
-    public ServiceDto toDto(Services services){
+    public ServiceDto toDto(Service service){
         return ServiceDto.builder()
-                .id(services.getId())
-                .name(services.getName())
-                .price(services.getPrice())
-                .medicalCenter(services.getMedicalCenter())
-                .serviceCategory(services.getServiceCategory())
+                .id(service.getId())
+                .name(service.getName())
+                .price(service.getPrice())
+                .medicalCenter(service.getMedicalCenter())
+                .serviceCategory(service.getServiceCategory())
                 .build();
     }
 }

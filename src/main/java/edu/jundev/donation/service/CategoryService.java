@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class CategotyService {
+public class CategoryService {
     private final ServiceCategoryRepository serviceCategoryRepository;
     private final CloudStorage cloudStorage;
     private final ServiceCategoryMapper serviceCategoryMapper;

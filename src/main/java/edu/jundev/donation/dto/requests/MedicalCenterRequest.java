@@ -2,18 +2,20 @@ package edu.jundev.donation.dto.requests;
 
 import lombok.*;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class MedicalCentreRequest {
-    @NonNull
+public class MedicalCenterRequest {
+    @NotBlank
     private String name;
 
-    @NonNull
+    @NotBlank
     private String location;
 
-    @NonNull
+    @NotNull
     private Long regionId;
-
 }
